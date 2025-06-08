@@ -4,28 +4,51 @@ cursos = []
 
 
 def agregar_alumno(nombre, cedula, curso, nota):
-    alumno = {
-        'nombre': nombre,
-        'cedula': cedula,
-        'curso': curso,
-        'nota': [float(nota)]
-    }
-    alumnos.append(alumno)
+    for c in cursos:
+        if c['nombre'].lower() == curso.lower():
+            if c['inscritos'] >= c['capacidad']:
+                print("⚠️ No hay cupo disponible en este curso.")
+                return
+            alumno = {
+                'nombre': nombre,
+                'cedula': cedula,
+                'curso': curso,
+                'nota': [float(nota)]
+            }
+            alumnos.append(alumno)
+            c['inscritos'] += 1
+            return
+        incrementar_inscritos(curso)
+    print("Curso no encontrado.")
 
 
 def agregar_profesor(nombre, cedula, curso):
     profe = {
         'nombre': nombre,
         'cedula': cedula,
-        'curso': curso,
+        'curso': curso
     }
     profes.append(profe)
 
+    if not curso_existe(curso):
+        codigo = "C-" + curso[:3].upper() + cedula[-3:]
+        agregar_curso(nombre_curso=curso, codigo=codigo, profesor=cedula)
 
-def agregar_cursos(nombre, codigo):
+
+def agregar_curso(nombre_curso, codigo, profesor, horario='Por asignar', capacidad=30):
+    for curso in cursos:
+        if curso['nombre'].lower() == nombre_curso.lower():
+            curso['horario'] = horario
+            return
     clase = {
-        'nombre': nombre,
+        'nombre': nombre_curso,
         'codigo': codigo,
+        'profesor': profesor,
+        'horario': horario,
+        'capacidad': capacidad,
+        'inscritos': 0,
+        'Alumnos': [],
+        'notas': []
     }
     cursos.append(clase)
 
@@ -96,3 +119,12 @@ def mejores_promedios():
     return {
         'eximidos': eximidos
     }
+
+
+def incrementar_inscritos(nombre_curso):
+    for curso in cursos:
+        if curso['nombre'].lower() == nombre_curso.lower():
+            if 'inscritos' in curso:
+                curso['inscritos'] += 1
+            else:
+                curso['inscritos'] = 1

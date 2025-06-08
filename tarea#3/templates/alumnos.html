@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Agregar Alumno</h2>
+    <form action="{{ url_for('agregar_alumno') }}" method="post" class="formulario">
+        <input type="text" name="nombre" placeholder="Nombre del alumno" required>
+        <input type="text" name="cedula" placeholder="Cédula" required>
+        <input type="text" name="curso" placeholder="Nombre del curso" required>
+        <input type="number" name="nota" placeholder="Nota" min="0" max="100" required>
+        <button type="submit">Agregar Alumno</button>
+    </form>
+
+    <h2>Lista de Alumnos</h2>
+    <ul class="lista">
+        {% for alumno in alumnos %}
+        <li>{{ alumno.nombre }} - Cédula: {{ alumno.cedula }} - Curso: {{ alumno.curso }} - Nota: {{ alumno.nota[0] }}
+        </li>
+        {% else %}
+        <li>No hay alumnos registrados.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
